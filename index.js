@@ -1,7 +1,7 @@
 // ライブラリの読み込み
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection, Events } = require('discord.js');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const dotenv = require('dotenv');
 
 // 環境変数の読み込み
