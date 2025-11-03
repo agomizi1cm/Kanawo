@@ -11,13 +11,16 @@ dotenv.config();
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildVoiceStates
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
     ]
 });
 
 client.serverProcess = null;
 client.activeVcSessions = new Map();
 client.adminUserIDs = (process.env.ADMIN_USER_IDS || '').split(',');
+client.voiceConnections = new Map();
 
 // --- コマンドローダー ---
 client.commands = new Collection();
