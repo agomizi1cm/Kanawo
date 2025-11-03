@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { joinVoiceChannel, VoiceConnectionStatus } = require('@discordjs/voice');
 
 module.exports = {
@@ -44,7 +44,12 @@ module.exports = {
             };
             client.voiceConnections.set(interaction.guildId, settings);
 
-            await interaction.reply(`ボイスチャンネル \`${channel.name}\` に参加しました。\nこのチャンネル \`#${interaction.channel.name}\` のメッセージを読み上げます。`);
+            const embed = new EmbedBuilder()
+                .setTitle('接続しました')
+                .setColor(7995326)
+                .setDescription(`<#${interaction.channelId}> に接続しました`);
+
+            await interaction.reply({ embeds: [embed] });
 
         } catch (error) {
             console.error(error);

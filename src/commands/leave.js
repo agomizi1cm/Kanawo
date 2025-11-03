@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { getVoiceConnection } = require('@discordjs/voice');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,7 +25,12 @@ module.exports = {
             // Mapから削除 (destroyイベントでも削除されるが、即時反映のため)
             client.voiceConnections.delete(interaction.guildId);
 
-            await interaction.reply('ボイスチャンネルから退出しました。');
+            const embed = new EmbedBuilder()
+                .setTitle('切断しました')
+                .setColor(14941566)
+                .setDescription(`<#${interaction.channelId}> から切断しました．`);
+
+            await interaction.reply({ embeds: [embed] });
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: '退出処理中にエラーが発生しました。', ephemeral: true });
