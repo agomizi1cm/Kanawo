@@ -16,23 +16,24 @@ const client = new Client({
 });
 
 client.serverProcess = null;
-client.activeVCSessions = new Map();
-client.adminUserIDs = process.env.ADMIN_USER_IDS ? process.env.ADMIN_USER_IDS.split(',') : [];
+client.activeVcSessions = new Map();
+client.adminUserIDs = (process.env.ADMIN_USER_IDS || '').split(',');
 
 // --- コマンドローダー ---
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(commandsPath);
+// .js ファイルのみをフィルタリング
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-for (const folder of commandFolders) {
-    const folderPath = path.join(commandsPath, folder);
-    const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
-    for (const file of commandFiles) {
-        const filePath = path.join(folderPath, file);
-        const command = require(filePath);
-        if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command);
-        }
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    
+    if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+        console.log(`[LOAD] コマンドを登録: ${command.data.name}`);
+    } else {
+        console.warn(`[WARN] コマンドの登録に失敗: ${filePath} (data または execute が見つかりません)`);
     }
 }
 
@@ -45,7 +46,10 @@ for (const file of eventFiles) {
     const event = require(filePath);
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args, client));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args, client));
     }
+    console.log(`[LOAD] イベントを登録: ${event.name}`);
 }
 
 client.login(process.env.DISCORD_BOT_TOKEN);
