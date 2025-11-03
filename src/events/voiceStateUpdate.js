@@ -80,7 +80,7 @@ module.exports = {
                         .setTitle('通話終了')
                         .setColor(14391348)
                         .addFields(
-                            { name: "`チャンネル`", value: oldChannel.name, inline: true },
+                            { name: "`チャンネル`", value: `<#${oldChannel.id}>`, inline: true },
                             { name: "`通話時間`", value: format_duration(durationSeconds), inline: true },
                             { name: "`終了時間`", value: format_date(endTime), inline: true }
                         )
@@ -101,7 +101,7 @@ module.exports = {
                         .setTitle('通話開始')
                         .setColor(10503659)
                         .addFields(
-                            { name: "`チャンネル`", value: newChannel.name, inline: true },
+                            { name: "`チャンネル`", value: `<#${newChannel.id}>`, inline: true },
                             { name: "`始めた人`", value: member.displayName, inline: true },
                             { name: "`開始時間`", value: format_date(startTime), inline: true }
                         )
